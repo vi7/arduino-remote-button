@@ -2,7 +2,10 @@ version: 2
 jobs:
   platformio_run:
     docker:
-      - image: python:3.9
+      - image: python:3.9-alpine3.14
+    shell: /bin/sh -leo pipefail
+    environment:
+      - BASH_ENV: /etc/profile
     steps:
       - run:
           name: Prepare
