@@ -8,6 +8,7 @@ jobs:
           name: Prepare
           command: |
             apk add --no-cache openssh git
+      - checkout
       - restore_cache: # **restores saved dependency cache if the Branch key template or requirements.txt files have not changed since the previous run**
           key: deps1-{{ .Branch }}-{{ checksum "platformio.ini" }}
       - run:
@@ -19,7 +20,6 @@ jobs:
           key: deps1-{{ .Branch }}-{{ checksum "platformio.ini" }}
           paths:
             - "~/.platformio"
-      - checkout
       - run:
           name: Compile
           command: platformio run
