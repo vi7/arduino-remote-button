@@ -2,7 +2,7 @@ version: 2
 jobs:
   platformio_run:
     docker:
-      - image: python:3.9-alpine3.14
+      - image: python:3.9
     steps:
       - run:
           name: Prepare
@@ -16,13 +16,13 @@ jobs:
           command: |
             pip install -U platformio
             platformio update
+      - run:
+          name: Compile
+          command: platformio run
       - save_cache: # ** special step to save dependency cache **
           key: deps1-{{ .Branch }}-{{ checksum "platformio.ini" }}
           paths:
             - "~/.platformio"
-      - run:
-          name: Compile
-          command: platformio run
 
 workflows:
   version: 2
