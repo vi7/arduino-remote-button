@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/vi7/arduino-remote-button.svg?branch=master)](https://travis-ci.com/vi7/arduino-remote-button)
+[![CircleCI](https://circleci.com/gh/vi7/arduino-remote-button/tree/master.svg?style=svg)](https://circleci.com/gh/vi7/arduino-remote-button/tree/master)
 
 Touch button with remote control
 ================================
