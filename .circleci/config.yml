@@ -20,6 +20,10 @@ jobs:
             pip install -U platformio
             platformio update
       - run:
+          name: Setup Environment Variables
+          command: |
+            echo 'export PATH=~/.platformio/packages/toolchain-atmelavr/bin:$PATH' >> $BASH_ENV
+      - run:
           name: Compile
           command: platformio run
       - save_cache: # ** special step to save dependency cache **
