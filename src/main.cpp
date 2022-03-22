@@ -27,7 +27,9 @@ void setupInterrupts() {
            INT0);  // disable INT0 external interrupt on PB2 - this is optional
   bitSet(GIMSK, PCIE);  // enable pin change interrupt
   // activate interrupts for the specific pins
+  #ifdef TOUCH_BUTTON
   bitSet(PCMSK, TOUCH_BUTTON_PIN);
+  #endif
   bitSet(PCMSK, RX_PIN);
   interrupts();
 }
@@ -89,6 +91,7 @@ void loop() {
  * Interrupt handler *
  *********************/
 ISR(PCINT0_vect) {
+  #ifdef TOUCH_BUTTON
   // Button interrupt handling
   currentButtonState = digitalRead(TOUCH_BUTTON_PIN);
   if (currentButtonState && !lastButtonState) {  // Button pressed
@@ -99,6 +102,7 @@ ISR(PCINT0_vect) {
     lastButtonState = LOW;
     return;
   }
+  #endif
 
   // Radio receiver interrupt handling
   RCSwitch::handleInterrupt();

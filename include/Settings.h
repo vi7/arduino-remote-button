@@ -14,7 +14,10 @@
 #define OUTPUT_ON         LOW  // SSR's have low level trigger
 #define OUTPUT_OFF        HIGH
 #define DEFAULT_STATE     OUTPUT_ON
-#define TOUCH_BUTTON_PIN  PB2  // PB3 is USB+ on Digispark USB, detach it before programming!
+
+#ifdef TOUCH_BUTTON
+  #define TOUCH_BUTTON_PIN  PB2  // PB3 is USB+ on Digispark USB, detach it before programming!
+#endif
 
 /** 32bit message format: 0xXXXXYYZZ
  * XXXX - 16bit preamble
