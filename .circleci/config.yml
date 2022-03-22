@@ -2,15 +2,8 @@ version: 2
 jobs:
   platformio_run:
     docker:
-      - image: python:3.9-alpine3.14
-    shell: /bin/sh -leo pipefail
-    environment:
-      - BASH_ENV: /etc/profile
+      - image: python:3.9
     steps:
-      - run:
-          name: Prepare
-          command: |
-            apk add --no-cache openssh git
       - checkout
       - restore_cache: # **restores saved dependency cache if the Branch key template or requirements.txt files have not changed since the previous run**
           key: deps1-{{ .Branch }}-{{ checksum "platformio.ini" }}
@@ -19,10 +12,6 @@ jobs:
           command: |
             pip install -U platformio
             platformio update
-      - run:
-          name: Setup Environment Variables
-          command: |
-            echo 'export PATH=~/.platformio/packages/toolchain-atmelavr/bin:$PATH' >> $BASH_ENV
       - run:
           name: Compile
           command: platformio run
