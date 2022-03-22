@@ -2,40 +2,23 @@
 #include <RCSwitch.h>
 #include <avr/sleep.h>
 
-#define RX_PIN            PB0
-#define OUTPUT_PIN        PB1
-#define TOUCH_BUTTON_PIN  PB2  // PB3 is USB+ on Digispark USB, detach it before programming!
-
-/** 32bit message format: 0xXXXXYYZZ
- * XXXX - 16bit preamble
- * YY   - 8bit receiver address
- * ZZ   - 8bit data
- */
-#define MESSAGE_ON    0x3C300303
-#define MESSAGE_OFF   0x3C300305
-
-// Messages for RX/TX debug using real remote control and receiver
-// #define MESSAGE1 0x530F0  // ORNO OR-GB-406 remote btn D/timer
-// #define MESSAGE2 0x530C3  // ORNO OR-GB-406 remote btn F/OFF
+#include "Settings.h"
 
 RCSwitch receiver = RCSwitch();
 volatile uint8_t lastButtonState = LOW;
 volatile uint8_t currentButtonState = LOW;
 
-// enables software Serial with TX on PB2 (TX only)
+/*
+ * Serial TX on PB2 (TX only!)
+ */
 void setupSerial() {
   Serial.begin(9600);
   Serial.println("\nDigispark USB is up. Hey there!");
 }
 
 void setupPins() {
-  // TODO: check if this fixes behavior of the "USB pins" (PB3, PB4)
-  // pinMode(TOUCH_BUTTON_PIN, INPUT);
-  // digitalWrite(TOUCH_BUTTON_PIN, LOW);
-
   pinMode(OUTPUT_PIN, OUTPUT);
-  // TODO: set to LOW after debugging
-  digitalWrite(OUTPUT_PIN, HIGH);
+  digitalWrite(OUTPUT_PIN, DEFAULT_STATE);
 }
 
 void setupInterrupts() {
@@ -64,14 +47,14 @@ void cpuSleep() {
 }
 
 void powerOn() {
-  digitalWrite(OUTPUT_PIN, HIGH);
+  digitalWrite(OUTPUT_PIN, OUTPUT_ON);
 }
 
 void powerOff() {
-  digitalWrite(OUTPUT_PIN, LOW);
+  digitalWrite(OUTPUT_PIN, OUTPUT_OFF);
 }
 
-void onTouch() { digitalRead(OUTPUT_PIN) ? powerOff() : powerOn(); }
+void onTouch() { digitalRead(OUTPUT_PIN) ? powerOn() : powerOff(); }
 
 void parseMessage() {
   switch (receiver.getReceivedValue()) {
@@ -93,7 +76,7 @@ void parseMessage() {
  **********/
 
 void setup() {
-  // setupSerial();  // uncomment to use Serial for debugging
+  // setupSerial();  // <- uncomment to use Serial for debugging
   setupPins();
   setupInterrupts();
 }

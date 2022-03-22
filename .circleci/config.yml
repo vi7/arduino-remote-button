@@ -1,0 +1,31 @@
+version: 2
+jobs:
+  platformio_run:
+    docker:
+      - image: python:3.9-alpine3.14
+    steps:
+      - run:
+          name: Prepare
+          command: |
+            apk add --no-cache openssh git
+      - restore_cache: # **restores saved dependency cache if the Branch key template or requirements.txt files have not changed since the previous run**
+          key: deps1-{{ .Branch }}-{{ checksum "platformio.ini" }}
+      - run:
+          name: Platformio init
+          command: |
+            pip install -U platformio
+            platformio update
+      - save_cache: # ** special step to save dependency cache **
+          key: deps1-{{ .Branch }}-{{ checksum "platformio.ini" }}
+          paths:
+            - "~/.platformio"
+      - checkout
+      - run:
+          name: Compile
+          command: platformio run
+
+workflows:
+  version: 2
+  platformio_run:
+    jobs:
+      - platformio_run
