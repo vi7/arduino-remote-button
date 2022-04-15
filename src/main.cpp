@@ -5,8 +5,10 @@
 #include "Settings.h"
 
 RCSwitch receiver = RCSwitch();
+#ifdef TOUCH_BUTTON
 volatile uint8_t lastButtonState = LOW;
 volatile uint8_t currentButtonState = LOW;
+#endif
 
 /*
  * Serial TX on PB2 (TX only!)
@@ -18,6 +20,10 @@ void setupSerial() {
 
 void setupPins() {
   pinMode(OUTPUT_PIN, OUTPUT);
+  // Blink on start
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(50);
+  digitalWrite(LED_BUILTIN, LOW);
   digitalWrite(OUTPUT_PIN, DEFAULT_STATE);
 }
 
@@ -63,7 +69,6 @@ void parseMessage() {
     case MESSAGE_ON:
       powerOn();
       break;
-
     case MESSAGE_OFF:
       powerOff();
       break;
